@@ -1,6 +1,6 @@
 import { CartItem, Coupon, Product } from '../../types.ts';
 import { useCart } from "../hooks";
-
+import { useMemo } from "react";
 interface Props {
   products: Product[];
   coupons: Coupon[];
@@ -26,7 +26,7 @@ export const CartPage = ({ products, coupons }: Props) => {
     return product.stock - (cartItem?.quantity || 0);
   };
 
-  const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } = calculateTotal()
+  const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } = useMemo(() => calculateTotal(), [cart, selectedCoupon]);
 
   const getAppliedDiscount = (item: CartItem) => {
     const { discounts } = item.product;
