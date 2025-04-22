@@ -31,6 +31,14 @@ export const useEditingProduct = (
     }
   };
 
+  const handleStockUpdate = (productId: string, newStock: number) => {
+    if (editingProduct && editingProduct.id === productId) {
+      const updatedProduct = { ...editingProduct, stock: newStock };
+      setEditingProduct(updatedProduct);
+      onProductUpdate(updatedProduct);
+    }
+  };
+
   const handleEditComplete = () => {
     if (editingProduct) {
       onProductUpdate(editingProduct);
@@ -42,6 +50,7 @@ export const useEditingProduct = (
     handleEditProduct,
     handleProductNameUpdate,
     handlePriceUpdate,
-    handleEditComplete
+    handleEditComplete,
+    handleStockUpdate
   };
 };
