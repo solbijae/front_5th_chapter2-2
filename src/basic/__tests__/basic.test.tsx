@@ -11,8 +11,10 @@ import {
 import { CartPage } from "../../refactoring/components/CartPage";
 import { AdminPage } from "../../refactoring/components/AdminPage";
 import { CartItem, Coupon, Product } from "../../types";
-import { useCart, useCoupons, useProducts } from "../../refactoring/hooks";
-import * as cartUtils from "../../refactoring/models/cart";
+import { useCart } from "../../refactoring/entities/cart/hooks/useCart";
+import { useCoupons } from "../../refactoring/entities/coupon/hooks/useCoupon";
+import { useProducts } from "../../refactoring/entities/product/hooks/useProduct";
+import * as cartUtils from "../../refactoring/entities/cart/utils/cart";
 
 const mockProducts: Product[] = [
   {

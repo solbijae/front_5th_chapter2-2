@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Coupon, Discount, Product } from '../../types.ts';
+import { useEditingProduct } from '../entities/product/hooks/useEditingProduct.ts';
 
 interface Props {
   products: Product[];
@@ -26,7 +27,14 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
     stock: 0,
     discounts: []
   });
-
+  
+  const { handleEditProduct, handleProductNameUpdate, handlePriceUpdate, handleEditComplete } = useEditingProduct(
+    editingProduct,
+    setEditingProduct,
+    setOpenProductIds,
+    onProductUpdate
+  );
+  
   const toggleProductAccordion = (productId: string) => {
     setOpenProductIds(prev => {
       const newSet = new Set(prev);
@@ -37,35 +45,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
       }
       return newSet;
     });
-  };
-
-  // handleEditProduct 함수 수정
-  const handleEditProduct = (product: Product) => {
-    setEditingProduct({...product});
-  };
-
-  // 새로운 핸들러 함수 추가
-  const handleProductNameUpdate = (productId: string, newName: string) => {
-    if (editingProduct && editingProduct.id === productId) {
-      const updatedProduct = { ...editingProduct, name: newName };
-      setEditingProduct(updatedProduct);
-    }
-  };
-
-  // 새로운 핸들러 함수 추가
-  const handlePriceUpdate = (productId: string, newPrice: number) => {
-    if (editingProduct && editingProduct.id === productId) {
-      const updatedProduct = { ...editingProduct, price: newPrice };
-      setEditingProduct(updatedProduct);
-    }
-  };
-
-  // 수정 완료 핸들러 함수 추가
-  const handleEditComplete = () => {
-    if (editingProduct) {
-      onProductUpdate(editingProduct);
-      setEditingProduct(null);
-    }
   };
 
   const handleStockUpdate = (productId: string, newStock: number) => {

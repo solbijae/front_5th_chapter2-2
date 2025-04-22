@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { CartPage } from './components/CartPage.tsx';
 import { AdminPage } from './components/AdminPage.tsx';
-import { useCoupons, useProducts } from "./hooks";
-import { initialProducts } from "./data/products";
-import { initialCoupons } from "./data/coupons";
+import { useCoupons } from "./entities/coupon/hooks/useCoupon.ts";
+import { useProducts } from "./entities/product/hooks/useProduct.ts";
+import { initialProducts } from "./entities/product/data/initialProduct.ts";
+import { initialCoupons } from "./entities/coupon/data/initialCoupon.ts";
 
 const App = () => {
   const { products, updateProduct, addProduct } = useProducts(initialProducts);
