@@ -1,4 +1,4 @@
-import { CartItem, Coupon } from "../../types";
+import { CartItem, Coupon, Product } from "../../types";
 
 export const calculateItemTotal = (item: CartItem) => {
   const maxDiscount = item.product.discounts.reduce((max, discount) => {
@@ -42,9 +42,12 @@ export const updateCartItemQuantity = (
   productId: string,
   newQuantity: number
 ): CartItem[] => {
+  // newQuantity가 0이면 해당 상품을 장바구니에서 제거
   if (newQuantity === 0) {
     return cart.filter((item) => item.product.id !== productId);
   }
+
+  // 요청된 수량과 최대 재고량 중 작은 수량으로 업데이트
   return cart.map((item) => {
     if (item.product.id === productId) {
       const maxQuantity = item.product.stock;
@@ -54,3 +57,18 @@ export const updateCartItemQuantity = (
     return item;
   });
 };
+
+// addToCart 순수함수 분리
+export const getItemAddedCart = (prevCart: CartItem[], product: Product) => {
+  const existingCartItem = prevCart.find((item) => item.product.id === product.id);
+  if (existingCartItem) {
+    return updateCartItemQuantity(prevCart, product.id, existingCartItem.quantity + 1);
+  } else {
+    return [...prevCart, { product, quantity: 1 }];
+  }
+}
+
+// removeFromCart 순수함수 분리
+export const getItemRemovedCart = (prevCart: CartItem[], productId: string) => {
+  return prevCart.filter((item) => item.product.id !== productId);
+}
