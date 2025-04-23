@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Coupon, Product } from '../../types.ts';
 import { useEditProduct } from '../hooks/useEditProduct';
 import { useAddCoupon } from '../hooks/useAddCoupon';
 import { useToggleProduct } from '../hooks/useToggleProduct';
+import { useAddNewProduct } from '../hooks/useAddNewProduct';
 interface Props {
   products: Product[];
   coupons: Coupon[];
@@ -12,32 +12,13 @@ interface Props {
 }
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
-  const [showNewProductForm, setShowNewProductForm] = useState(false);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
-    name: '',
-    price: 0,
-    stock: 0,
-    discounts: []
-  });
-
   const { editingProduct, newDiscount, setNewDiscount, handleEditProduct, handleProductNameUpdate, handlePriceUpdate, handleStockUpdate, handleEditComplete, handleAddDiscount, handleRemoveDiscount } = useEditProduct(products, onProductUpdate);
 
   const { newCoupon, setNewCoupon, handleAddCoupon } = useAddCoupon(onCouponAdd);
 
   const { openProductIds, toggleProductAccordion } = useToggleProduct();
 
-  // 새 상품 추가
-  const handleAddNewProduct = () => {
-    const productWithId = { ...newProduct, id: Date.now().toString() };
-    onProductAdd(productWithId);
-    setNewProduct({
-      name: '',
-      price: 0,
-      stock: 0,
-      discounts: []
-    });
-    setShowNewProductForm(false);
-  };
+  const { showNewProductForm, setShowNewProductForm, newProduct, setNewProduct, handleAddNewProduct } = useAddNewProduct(onProductAdd);
 
   return (
     <div className="container mx-auto p-4">
