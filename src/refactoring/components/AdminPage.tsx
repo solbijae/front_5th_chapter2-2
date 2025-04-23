@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Coupon, Product } from '../../types.ts';
 import { useEditProduct } from '../hooks/useEditProduct';
 import { useAddCoupon } from '../hooks/useAddCoupon';
+import { useToggleProduct } from '../hooks/useToggleProduct';
 interface Props {
   products: Product[];
   coupons: Coupon[];
@@ -11,7 +12,6 @@ interface Props {
 }
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
-  const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
   const [showNewProductForm, setShowNewProductForm] = useState(false);
   const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
     name: '',
@@ -24,17 +24,7 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
 
   const { newCoupon, setNewCoupon, handleAddCoupon } = useAddCoupon(onCouponAdd);
 
-  const toggleProductAccordion = (productId: string) => {
-    setOpenProductIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(productId)) {
-        newSet.delete(productId);
-      } else {
-        newSet.add(productId);
-      }
-      return newSet;
-    });
-  };
+  const { openProductIds, toggleProductAccordion } = useToggleProduct();
 
   // 새 상품 추가
   const handleAddNewProduct = () => {
