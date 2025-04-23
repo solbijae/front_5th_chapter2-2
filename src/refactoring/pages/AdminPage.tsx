@@ -3,6 +3,9 @@ import { useEditProduct } from '../hooks/useEditProduct';
 import { useAddCoupon } from '../hooks/useAddCoupon';
 import { useToggleProduct } from '../hooks/useToggleProduct';
 import { useAddNewProduct } from '../hooks/useAddNewProduct';
+import { useAtom } from 'jotai';
+import { editProductAtom, newDiscountAtom, newCouponAtom, newProductAtom } from '../atoms/adminAtoms';
+
 interface Props {
   products: Product[];
   coupons: Coupon[];
@@ -12,13 +15,18 @@ interface Props {
 }
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
-  const { editingProduct, newDiscount, setNewDiscount, handleEditProduct, handleProductNameUpdate, handlePriceUpdate, handleStockUpdate, handleEditComplete, handleAddDiscount, handleRemoveDiscount } = useEditProduct(products, onProductUpdate);
+  const [editingProduct] = useAtom(editProductAtom);
+  const [newDiscount, setNewDiscount] = useAtom(newDiscountAtom);
+  const [newCoupon, setNewCoupon] = useAtom(newCouponAtom);
+  const [newProduct, setNewProduct] = useAtom(newProductAtom);
 
-  const { newCoupon, setNewCoupon, handleAddCoupon } = useAddCoupon(onCouponAdd);
+  const { handleEditProduct, handleProductNameUpdate, handlePriceUpdate, handleStockUpdate, handleEditComplete, handleAddDiscount, handleRemoveDiscount } = useEditProduct(products, onProductUpdate);
+
+  const { handleAddCoupon } = useAddCoupon(onCouponAdd);
 
   const { openProductIds, toggleProductAccordion } = useToggleProduct();
 
-  const { showNewProductForm, setShowNewProductForm, newProduct, setNewProduct, handleAddNewProduct } = useAddNewProduct(onProductAdd);
+  const { showNewProductForm, setShowNewProductForm, handleAddNewProduct } = useAddNewProduct(onProductAdd);
 
   return (
     <div className="container mx-auto p-4">
@@ -83,7 +91,7 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
                 >
                   {product.name} - {product.price}원 (재고: {product.stock})
                 </button>
-                {openProductIds.has(product.id) && (
+                {openProductIds.includes(product.id) && (
                   <div className="mt-2">
                     {editingProduct && editingProduct.id === product.id ? (
                       <div>
@@ -114,7 +122,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
                             className="w-full p-2 border rounded"
                           />
                         </div>
-                        {/* 할인 정보 수정 부분 */}
                         <div>
                           <h4 className="text-lg font-semibold mb-2">할인 정보</h4>
                           {editingProduct.discounts.map((discount, index) => (

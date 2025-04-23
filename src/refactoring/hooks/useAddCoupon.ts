@@ -1,18 +1,11 @@
-import { useState } from 'react';
 import { Coupon } from '../../types';
+import { useAtom } from 'jotai';
+import { newCouponAtom } from '../atoms/adminAtoms';
 
 export const useAddCoupon = (onCouponAdd: (coupon: Coupon) => void) => {
-  const [newCoupon, setNewCoupon] = useState<Coupon>({
-    name: '',
-    code: '',
-    discountType: 'percentage',
-    discountValue: 0
-  });
+  const [newCoupon, setNewCoupon] = useAtom(newCouponAtom);
 
   return {
-    newCoupon,
-    setNewCoupon,
-
     // 쿠폰 추가 버튼 클릭 시 실행
     handleAddCoupon: () => {
       // 쿠폰 목록에 새로운 쿠폰 추가

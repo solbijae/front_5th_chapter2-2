@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { openProductIdsAtom } from '../atoms/adminAtoms';
 
 export const useToggleProduct = () => {
-  const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
+  const [openProductIds, setOpenProductIds] = useAtom(openProductIdsAtom);
   
   return {
     openProductIds,
-    setOpenProductIds,
-
     toggleProductAccordion: (productId: string) => {
       setOpenProductIds(prev => {
         const newSet = new Set(prev);
@@ -15,7 +14,7 @@ export const useToggleProduct = () => {
         } else {
           newSet.add(productId);
         } 
-        return newSet;
+        return Array.from(newSet);
       });
     }
   }

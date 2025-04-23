@@ -1,15 +1,12 @@
-import { Product, Discount } from '../../types';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { editProductAtom, newDiscountAtom } from '../atoms/adminAtoms';
+import { Product } from '../../types';
 
 export const useEditProduct = (products: Product[], onProductUpdate: (product: Product) => void) => {
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [newDiscount, setNewDiscount] = useState<Discount>({ quantity: 0, rate: 0 });
+  const [editingProduct, setEditingProduct] = useAtom(editProductAtom);
+  const [newDiscount, setNewDiscount] = useAtom(newDiscountAtom);
 
   return {
-    editingProduct,
-    newDiscount,
-    setNewDiscount,
-
     // 수정하려는 상품의 정보를 복사해서 새로운 객체 생성 (editingProduct 상태에 저장)
     handleEditProduct: (product: Product) => {
       setEditingProduct({...product});
@@ -52,7 +49,7 @@ export const useEditProduct = (products: Product[], onProductUpdate: (product: P
     // 상품 할인 추가
     handleAddDiscount: (productId: string) => {
       const updatedProduct = products.find(p => p.id === productId);
-      if (updatedProduct && editingProduct) {
+      if (updatedProduct && editingProduct && newDiscount) {
         const newProduct = {
           ...updatedProduct,
           discounts: [...updatedProduct.discounts, newDiscount]
