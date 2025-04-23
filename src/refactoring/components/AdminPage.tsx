@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Coupon, Discount, Product } from '../../types.ts';
-
+import { useEditProduct } from '../hooks/useEditProduct';
 interface Props {
   products: Product[];
   coupons: Coupon[];
@@ -11,8 +11,6 @@ interface Props {
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
   const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [newDiscount, setNewDiscount] = useState<Discount>({ quantity: 0, rate: 0 });
   const [newCoupon, setNewCoupon] = useState<Coupon>({
     name: '',
     code: '',
@@ -27,6 +25,8 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
     discounts: []
   });
 
+  const { editingProduct, newDiscount, setNewDiscount, handleEditProduct, handleProductNameUpdate, handlePriceUpdate, handleStockUpdate, handleEditComplete, handleAddDiscount, handleRemoveDiscount } = useEditProduct(products, onProductUpdate);
+
   const toggleProductAccordion = (productId: string) => {
     setOpenProductIds(prev => {
       const newSet = new Set(prev);
@@ -37,72 +37,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
       }
       return newSet;
     });
-  };
-
-  // 수정하려는 상품의 정보를 복사해서 새로운 객체 생성 (editingProduct 상태에 저장)
-  const handleEditProduct = (product: Product) => {
-    setEditingProduct({...product});
-  };
-
-  // 상품명 수정
-  const handleProductNameUpdate = (productId: string, newName: string) => {
-    if (editingProduct && editingProduct.id === productId) {
-      const updatedProduct = { ...editingProduct, name: newName };
-      setEditingProduct(updatedProduct);
-    }
-  };
-
-  // 상품 가격 수정
-  const handlePriceUpdate = (productId: string, newPrice: number) => {
-    if (editingProduct && editingProduct.id === productId) {
-      const updatedProduct = { ...editingProduct, price: newPrice };
-      setEditingProduct(updatedProduct);
-    }
-  };
-
-  // 상품 수정 완료
-  const handleEditComplete = () => {
-    if (editingProduct) {
-      onProductUpdate(editingProduct);
-      setEditingProduct(null);
-    }
-  };
-
-  // 상품 재고 수정
-  const handleStockUpdate = (productId: string, newStock: number) => {
-    const updatedProduct = products.find(p => p.id === productId);
-    if (updatedProduct) {
-      const newProduct = { ...updatedProduct, stock: newStock };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
-    }
-  };
-
-  // 상품 할인 추가
-  const handleAddDiscount = (productId: string) => {
-    const updatedProduct = products.find(p => p.id === productId);
-    if (updatedProduct && editingProduct) {
-      const newProduct = {
-        ...updatedProduct,
-        discounts: [...updatedProduct.discounts, newDiscount]
-      };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
-      setNewDiscount({ quantity: 0, rate: 0 });
-    }
-  };
-
-  // 상품 할인 제거
-  const handleRemoveDiscount = (productId: string, index: number) => {
-    const updatedProduct = products.find(p => p.id === productId);
-    if (updatedProduct) {
-      const newProduct = {
-        ...updatedProduct,
-        discounts: updatedProduct.discounts.filter((_, i) => i !== index)
-      };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
-    }
   };
 
   // 쿠폰 추가
