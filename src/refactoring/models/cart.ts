@@ -72,3 +72,27 @@ export const getItemAddedCart = (prevCart: CartItem[], product: Product) => {
 export const getItemRemovedCart = (prevCart: CartItem[], productId: string) => {
   return prevCart.filter((item) => item.product.id !== productId);
 }
+
+// CartPage 순수함수 분리
+export const getMaxDiscount = (discounts: { quantity: number; rate: number }[]) => {
+  return discounts.reduce((max, discount) => Math.max(max, discount.rate), 0);
+};
+
+// CartPage 순수함수 분리
+export const getRemainingStock = (product: Product, cart: CartItem[]) => {
+  const cartItem = cart.find(item => item.product.id === product.id);
+  return product.stock - (cartItem?.quantity || 0);
+};
+
+// CartPage 순수함수 분리
+export const getAppliedDiscount = (item: CartItem) => {
+  const { discounts } = item.product;
+  const { quantity } = item;
+  let appliedDiscount = 0;
+  for (const discount of discounts) {
+    if (quantity >= discount.quantity) {
+      appliedDiscount = Math.max(appliedDiscount, discount.rate);
+    }
+  }
+  return appliedDiscount;
+};
