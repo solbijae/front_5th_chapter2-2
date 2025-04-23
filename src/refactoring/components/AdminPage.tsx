@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Coupon, Discount, Product } from '../../types.ts';
+import { Coupon, Product } from '../../types.ts';
 import { useEditProduct } from '../hooks/useEditProduct';
+import { useAddCoupon } from '../hooks/useAddCoupon';
 interface Props {
   products: Product[];
   coupons: Coupon[];
@@ -11,12 +12,6 @@ interface Props {
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
   const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
-  const [newCoupon, setNewCoupon] = useState<Coupon>({
-    name: '',
-    code: '',
-    discountType: 'percentage',
-    discountValue: 0
-  });
   const [showNewProductForm, setShowNewProductForm] = useState(false);
   const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
     name: '',
@@ -27,6 +22,8 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
 
   const { editingProduct, newDiscount, setNewDiscount, handleEditProduct, handleProductNameUpdate, handlePriceUpdate, handleStockUpdate, handleEditComplete, handleAddDiscount, handleRemoveDiscount } = useEditProduct(products, onProductUpdate);
 
+  const { newCoupon, setNewCoupon, handleAddCoupon } = useAddCoupon(onCouponAdd);
+
   const toggleProductAccordion = (productId: string) => {
     setOpenProductIds(prev => {
       const newSet = new Set(prev);
@@ -36,17 +33,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
         newSet.add(productId);
       }
       return newSet;
-    });
-  };
-
-  // 쿠폰 추가
-  const handleAddCoupon = () => {
-    onCouponAdd(newCoupon);
-    setNewCoupon({
-      name: '',
-      code: '',
-      discountType: 'percentage',
-      discountValue: 0
     });
   };
 
