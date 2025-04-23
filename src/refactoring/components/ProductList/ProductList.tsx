@@ -1,17 +1,19 @@
 import { getMaxDiscount, getRemainingStock } from '../../models/cart';
-import { Product, CartItem } from "../../../types"
+import { Product } from "../../../types"
+import { useAtom } from 'jotai';
+import { cartAtom } from '../../atoms/cartAtoms';
+import { useCart } from '../../hooks/useCart';
+
 
 export const ProductList = (
   {
     products,
-    cart,
-    addToCart
   }: {
     products: Product[],
-    cart: CartItem[],
-    addToCart: (product: Product) => void
   }
 ) => {
+  const [cart] = useAtom(cartAtom);
+  const { addToCart } = useCart();
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">상품 목록</h2>

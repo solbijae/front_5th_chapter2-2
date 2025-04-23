@@ -1,29 +1,17 @@
+// src/refactoring/components/CartList/CartList.tsx
 import { getAppliedDiscount } from "../../models/cart"
-import { Coupon, CartItem } from '../../../types';
+import { Coupon } from '../../../types';
+import { useAtom } from "jotai";
+import { cartAtom } from "../../atoms/cartAtoms";
+import { useCart } from "../../hooks/useCart";
 
 interface Props {
   coupons: Coupon[];
-  cart: CartItem[];
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  applyCoupon: (coupon: Coupon) => void;
-  calculateTotal: () => {
-    totalBeforeDiscount: number;
-    totalAfterDiscount: number;
-    totalDiscount: number;
-  };
-  selectedCoupon: Coupon | null;
 }
 
-export const CartList = ({ 
-  coupons, 
-  cart, 
-  removeFromCart, 
-  updateQuantity, 
-  applyCoupon, 
-  calculateTotal,
-  selectedCoupon 
-}: Props) => {
+export const CartList = ({ coupons }: Props) => {
+  const [cart] = useAtom(cartAtom);
+  const { removeFromCart, updateQuantity, applyCoupon, calculateTotal, selectedCoupon } = useCart();
   const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } = calculateTotal();
 
   return (
@@ -38,13 +26,13 @@ export const CartList = ({
                 <span className="font-semibold">{item.product.name}</span>
                 <br/>
                 <span className="text-sm text-gray-600">
-              {item.product.price}원 x {item.quantity}
+                  {item.product.price}원 x {item.quantity}
                   {appliedDiscount > 0 && (
                     <span className="text-green-600 ml-1">
-                  ({(appliedDiscount * 100).toFixed(0)}% 할인 적용)
-                </span>
+                      ({(appliedDiscount * 100).toFixed(0)}% 할인 적용)
+                    </span>
                   )}
-            </span>
+                </span>
               </div>
               <div>
                 <button

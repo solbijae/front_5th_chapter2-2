@@ -1,3 +1,4 @@
+import { Provider } from "jotai";
 import { useState } from "react";
 import { describe, expect, test } from "vitest";
 import {
@@ -84,7 +85,11 @@ const TestAdminPage = () => {
 describe("basic > ", () => {
   describe("시나리오 테스트 > ", () => {
     test("장바구니 페이지 테스트 > ", async () => {
-      render(<CartPage products={mockProducts} coupons={mockCoupons} />);
+      render(
+        <Provider>
+          <CartPage products={mockProducts} coupons={mockCoupons} />
+        </Provider>
+      );
       const product1 = screen.getByTestId("product-p1");
       const product2 = screen.getByTestId("product-p2");
       const product3 = screen.getByTestId("product-p3");

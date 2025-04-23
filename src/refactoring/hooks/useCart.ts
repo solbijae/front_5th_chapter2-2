@@ -1,11 +1,12 @@
-// useCart.ts
-import { useState } from "react";
-import { CartItem, Coupon, Product } from "../../types";
+// src/refactoring/hooks/useCart.ts
+import { useAtom } from "jotai";
+import { Coupon, Product } from "../../types";
 import { calculateCartTotal, getItemAddedCart, getItemRemovedCart, updateCartItemQuantity } from "../models/cart";
+import { cartAtom, selectedCouponAtom } from "../atoms/cartAtoms";
 
 export const useCart = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [cart, setCart] = useAtom(cartAtom);
+  const [selectedCoupon, setSelectedCoupon] = useAtom(selectedCouponAtom);
 
   const addToCart = (product: Product) => {
     setCart(prevCart => getItemAddedCart(prevCart, product));
