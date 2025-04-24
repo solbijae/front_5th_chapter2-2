@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { CartItem, Coupon, Product } from "../../../../types";
 
 export const calculateItemTotal = (item: CartItem) => {

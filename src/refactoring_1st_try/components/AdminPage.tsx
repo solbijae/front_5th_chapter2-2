@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Coupon, Discount, Product } from '../../types.ts';
+import { Coupon, Product } from '../../types.ts';
 import { useEditingProduct } from '../entities/product/hooks/useEditingProduct.ts';
 import { useOpenProduct } from '../entities/product/hooks/useOpenProduct.ts';
 import { useCoupons } from '../entities/discount/hooks/useCoupon.ts';
@@ -14,7 +14,6 @@ interface Props {
 }
 
 export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, onCouponAdd }: Props) => {
-  // const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showNewProductForm, setShowNewProductForm] = useState(false);
   const { newProduct, setNewProduct, handleAddNewProduct } = useProducts(products, onProductAdd);
@@ -32,7 +31,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
     newCoupon, 
     setNewCoupon, 
     handleAddCoupon, 
-    applyCoupon, 
     newDiscount, 
     setNewDiscount,
     handleAddDiscount,
@@ -48,7 +46,7 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
       setEditingProduct(null);
     }
   );
-  
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">관리자 페이지</h1>
@@ -143,7 +141,6 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
                             className="w-full p-2 border rounded"
                           />
                         </div>
-                        {/* 할인 정보 수정 부분 */}
                         <div>
                           <h4 className="text-lg font-semibold mb-2">할인 정보</h4>
                           {editingProduct.discounts.map((discount, index) => (

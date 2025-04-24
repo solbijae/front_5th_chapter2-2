@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Coupon, Product } from '../../types.ts';
 import { useCart } from "../entities/cart/hooks/useCart";
 import { getMaxDiscount, getRemainingStock, getAppliedDiscount } from "../entities/cart/utils/cart";

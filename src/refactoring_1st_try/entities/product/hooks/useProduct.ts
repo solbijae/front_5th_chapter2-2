@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Product } from "../../../../types";
-import { initialProducts } from "../data/initialProduct";
 
 export const useProducts = (initialProducts: Product[], onProductAdd?: (product: Product) => void) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
